@@ -33,6 +33,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ### What We Developed — Feature by Feature
 
 #### 1. Add Tasks with Priority
+
 **What it is:** A form at the top with a text input, three priority buttons (Low / Medium / High), and an "Add Task" button.
 
 **What it does:** Creates a new task object and prepends it to the task list. The task gets saved to localStorage immediately.
@@ -42,6 +43,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 2. Task List with Priority Badges
+
 **What it is:** A list of task cards. Each card shows the task title, a colour-coded priority badge (red/yellow/green), accumulated time spent, a Start button, and a delete button.
 
 **What it does:** Renders the current filtered list of tasks. Completed tasks show with a strikethrough. The focused task glows with an accent border.
@@ -51,6 +53,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 3. Mark Tasks Done / Pending
+
 **What it is:** A checkbox on the left of each task card.
 
 **What it does:** Toggles `task.completed`. Completed tasks get a strikethrough, reduced opacity, and their Start button disappears. If the task was being timed, the Focus Timer auto-stops.
@@ -60,6 +63,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 4. Delete Tasks
+
 **What it is:** A red ✕ button on the right of each task card.
 
 **What it does:** Removes the task from the list permanently. If the deleted task was being timed, the Focus Timer auto-stops and resets.
@@ -69,6 +73,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 5. Filter — All / Pending / Done
+
 **What it is:** A full-width 3-segment button bar below the Add Task form.
 
 **What it does:** Switches the visible task list between all tasks, only pending tasks, and only completed tasks. Does NOT delete tasks — just changes the view.
@@ -78,6 +83,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 6. Stats Bar (Total / Done / Pending)
+
 **What it is:** Three cards at the top of the app showing counts.
 
 **What it does:** Always shows the live count of total tasks, completed tasks, and pending tasks. Numbers are colour-coded: purple (total), green (done), amber (pending).
@@ -87,9 +93,11 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 7. Focus Timer (per-task session tracking)
+
 **What it is:** A timer card at the top with a large 00:00 display, Pause / Stop & Save / Reset buttons, and a label showing which task is being focused.
 
 **What it does:**
+
 - Idle state: shows "Click Start on any task to begin a session"
 - When a task's Start button is clicked: auto-starts the timer for that task, shows the task name above the clock
 - Pause: freezes the timer (session continues)
@@ -99,6 +107,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 - Browser tab title updates to show `MM:SS — Task Name` while running
 
 **Why we built it:** This is the richest hook showcase in the app:
+
 - `useRef` (×2) — one ref stores the interval ID (mutating it doesn't trigger re-render), another mirrors the `seconds` state value to solve the stale closure problem in `handleStopSave`
 - `useEffect` (×4) — one auto-starts when a task is linked, one manages the interval, one updates the page title, one syncs `secondsRef`
 - `useCallback` — all four handlers (Pause, Resume, StopSave, Reset) are memoized
@@ -107,6 +116,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 8. Time Spent Display on Tasks
+
 **What it is:** A small `⏱ 3m 12s` label under the priority badge on each task card. Only visible once the task has at least 1 second of recorded time.
 
 **What it does:** Shows the total time accumulated across all focus sessions for that task. Persists across page reloads (stored in the task object in localStorage). While that task is actively being timed, the label pulses and turns accent colour.
@@ -116,6 +126,7 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 9. Dark / Light Theme Toggle
+
 **What it is:** A pill-shaped button in the top-right corner of the header. Shows "☀ Light" in dark mode and "🌙 Dark" in light mode.
 
 **What it does:** Switches the entire app between dark (default) and light colour schemes. The preference is saved to localStorage. The theme applies instantly via CSS custom properties — no flicker, no re-render of individual components.
@@ -125,39 +136,12 @@ A **Task Manager** built entirely in React as a learning/demo project. Every fea
 ---
 
 #### 10. Clear Completed Button
+
 **What it is:** A red-bordered button that appears at the bottom of the task list only when there are completed tasks.
 
 **What it does:** Removes all completed tasks in one click. If the currently focused task is completed, the Focus Timer is also cleared.
 
 **Why we built it:** To demonstrate **conditional rendering** (`stats.done > 0 &&`), **bulk state mutation** (`setTasks(prev => prev.filter(t => !t.completed))`), and **coordinated state cleanup** (checking if the focused task is in the completed set before clearing).
-
----
-
-#### 11. React Fundamentals Legend
-**What it is:** A reference card at the bottom of the app in two columns — Hooks (left) and Core Concepts (right).
-
-**What it does:** Lists every React fundamental used in the app with a one-line description of where it's applied.
-
-**Why we built it:** To make the demo self-explanatory when presenting to someone. Instead of explaining verbally what each hook does, the app documents itself. Also demonstrates **static data outside the component** (the `HOOKS` and `CONCEPTS` arrays are defined at module level, not inside the component function, because they never change), **component composition** (`LegendGroup` is a sub-component composed inside `Legend`), and **lists & keys** (items rendered with `.map()` and `key={item.name}`).
-
----
-
-### Summary Table — Everything Built, What It Demonstrates
-
-| What We Built | File(s) | React Concepts Demonstrated |
-|---|---|---|
-| Task list with CRUD | `App.jsx`, `TaskList.jsx`, `TaskItem.jsx` | useState, useCallback, lists & keys, props, conditional rendering |
-| Add task form | `TaskInput.jsx` | Controlled component, useRef, useCallback, useEffect |
-| Priority badges | `TaskItem.jsx`, `App.css` | Conditional CSS class, props |
-| Filter bar | `Filter.jsx`, `App.jsx` | useMemo (filteredTasks), props, lists & keys |
-| Stats cards | `Stats.jsx`, `App.jsx` | useMemo (stats), props, lists & keys |
-| Focus Timer | `FocusTimer.jsx`, `App.jsx` | useRef (×2), useEffect (×4), useCallback (×4), useMemo |
-| Per-task time spent | `TaskItem.jsx`, `App.jsx` | State persistence, conditional rendering, derived display |
-| Dark / Light theme | `ThemeContext.jsx`, `index.css` | createContext, useContext, useEffect (DOM), custom hook |
-| Theme toggle button | `App.jsx` | useContext, conditional rendering |
-| localStorage sync | `App.jsx`, `ThemeContext.jsx` | useEffect (side effect), lazy useState initializer |
-| Clear completed | `App.jsx` | useCallback, conditional rendering, functional state update |
-| Fundamentals legend | `Legend.jsx` | Component composition, static data, lists & keys |
 
 ---
 
@@ -171,16 +155,16 @@ A React demo app that intentionally exercises every core React fundamental in a 
 
 ### Features
 
-| Feature | Purpose |
-|---|---|
-| Add / Delete tasks | Core CRUD |
-| Priority (Low / Medium / High) | Visual categorisation |
-| Mark tasks done / pending | Toggle state |
-| Filter (All / Pending / Done) | Derived view |
-| Focus Timer linked to tasks | useRef + useEffect demo |
-| Time spent per task | Accumulated session seconds |
-| Dark / Light theme | Context API demo |
-| React Fundamentals Legend | Self-documenting UI |
+| Feature                        | Purpose                     |
+| ------------------------------ | --------------------------- |
+| Add / Delete tasks             | Core CRUD                   |
+| Priority (Low / Medium / High) | Visual categorisation       |
+| Mark tasks done / pending      | Toggle state                |
+| Filter (All / Pending / Done)  | Derived view                |
+| Focus Timer linked to tasks    | useRef + useEffect demo     |
+| Time spent per task            | Accumulated session seconds |
+| Dark / Light theme             | Context API demo            |
+| React Fundamentals Legend      | Self-documenting UI         |
 
 ---
 
@@ -248,12 +232,14 @@ AppContent
 **Used in:**
 
 #### `App.jsx`
+
 ```js
 const [tasks, setTasks] = useState(() => {
   const saved = localStorage.getItem("tasks");
   return saved ? JSON.parse(saved) : [];
 });
 ```
+
 - **Lazy initializer** — the function inside `useState(() => ...)` runs only once on mount.
   If you wrote `useState(JSON.parse(...))` instead, it would parse localStorage on every render.
 - Stores the full task array: `[{ id, text, completed, priority, timeSpent }, ...]`
@@ -261,38 +247,46 @@ const [tasks, setTasks] = useState(() => {
 ```js
 const [filter, setFilter] = useState("all");
 ```
+
 - Controls which tasks are visible. Values: `"all"`, `"pending"`, `"done"`.
 
 ```js
 const [focusedTaskId, setFocusedTaskId] = useState(null);
 ```
+
 - ID of the task currently linked to the Focus Timer. `null` = no task focused.
 
 #### `ThemeContext.jsx`
+
 ```js
 const [dark, setDark] = useState(() => {
-  const saved = localStorage.getItem('theme')
-  return saved !== null ? saved === 'dark' : true
-})
+  const saved = localStorage.getItem("theme");
+  return saved !== null ? saved === "dark" : true;
+});
 ```
+
 - Lazy initializer reads from localStorage.
 - Defaults to `true` (dark) if no preference is saved.
 
 #### `TaskInput.jsx`
+
 ```js
-const [text, setText] = useState('')
-const [priority, setPriority] = useState('medium')
-const [error, setError] = useState('')
+const [text, setText] = useState("");
+const [priority, setPriority] = useState("medium");
+const [error, setError] = useState("");
 ```
+
 - Three independent state variables for the form.
 - `text` + `priority` are **controlled inputs** (value tied to state).
 - `error` drives conditional rendering of the error message.
 
 #### `FocusTimer.jsx`
+
 ```js
-const [seconds, setSeconds] = useState(0)
-const [running, setRunning] = useState(false)
+const [seconds, setSeconds] = useState(0);
+const [running, setRunning] = useState(false);
 ```
+
 - `seconds` — current session elapsed time (increments every 1s via interval).
 - `running` — drives whether the interval is active (watched by a `useEffect`).
 
@@ -305,97 +299,113 @@ const [running, setRunning] = useState(false)
 **Used in:**
 
 #### `App.jsx`
+
 ```js
 useEffect(() => {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }, [tasks]);
 ```
+
 - **Sync to localStorage** every time `tasks` changes (including `timeSpent` updates).
 - Dependency array `[tasks]` means it only re-runs when tasks actually change.
 
 #### `ThemeContext.jsx`
+
 ```js
 useEffect(() => {
   if (dark) {
-    document.body.removeAttribute('data-theme')
+    document.body.removeAttribute("data-theme");
   } else {
-    document.body.setAttribute('data-theme', 'light')
+    document.body.setAttribute("data-theme", "light");
   }
-  localStorage.setItem('theme', dark ? 'dark' : 'light')
-}, [dark])
+  localStorage.setItem("theme", dark ? "dark" : "light");
+}, [dark]);
 ```
+
 - **DOM side effect** — modifies `document.body` attribute.
 - Dark mode uses `:root` CSS vars by default (no attribute needed).
 - Light mode sets `data-theme="light"` which triggers CSS overrides.
 - Also persists the preference to localStorage.
 
 #### `TaskInput.jsx`
+
 ```js
 useEffect(() => {
-  inputRef.current?.focus()
-}, [])
+  inputRef.current?.focus();
+}, []);
 ```
+
 - Empty dependency array `[]` = runs **once on mount only**.
 - Auto-focuses the input when the page loads.
 
 #### `FocusTimer.jsx` — 4 separate effects, each with a single responsibility:
 
 **Effect 1 — Keep secondsRef in sync:**
+
 ```js
 useEffect(() => {
-  secondsRef.current = seconds
-}, [seconds])
+  secondsRef.current = seconds;
+}, [seconds]);
 ```
+
 - Why this exists: `handleStopSave` needs the current `seconds` value but is wrapped in
   `useCallback` with no `seconds` in deps (to avoid recreating every second).
   The ref acts as a "live window" into state without causing stale closures.
 
 **Effect 2 — Auto-start/reset when focused task changes:**
+
 ```js
 useEffect(() => {
-  clearInterval(intervalRef.current)
+  clearInterval(intervalRef.current);
   if (focusedTask) {
-    setSeconds(0)
-    secondsRef.current = 0
-    setRunning(true)
+    setSeconds(0);
+    secondsRef.current = 0;
+    setRunning(true);
   } else {
-    setRunning(false)
-    setSeconds(0)
+    setRunning(false);
+    setSeconds(0);
   }
-}, [focusedTask?.id])
+}, [focusedTask?.id]);
 ```
+
 - Dependency is `focusedTask?.id` (not the full object) to avoid re-running when
   the task's `timeSpent` updates every second.
 - When a new task is focused: reset to 0, auto-start.
 - When focus is cleared (Stop/Reset/task deleted): stop and reset.
 
 **Effect 3 — Manage interval based on `running` state:**
+
 ```js
 useEffect(() => {
   if (running) {
-    intervalRef.current = setInterval(() => setSeconds((s) => s + 1), 1000)
+    intervalRef.current = setInterval(() => setSeconds((s) => s + 1), 1000);
   } else {
-    clearInterval(intervalRef.current)
+    clearInterval(intervalRef.current);
   }
-  return () => clearInterval(intervalRef.current) // cleanup
-}, [running])
+  return () => clearInterval(intervalRef.current); // cleanup
+}, [running]);
 ```
+
 - The **cleanup function** `return () => clearInterval(...)` prevents memory leaks.
   It runs before the next effect execution AND on component unmount.
 - Uses **functional update** `setSeconds(s => s + 1)` so the interval closure
   never holds a stale value of `seconds`.
 
 **Effect 4 — Update browser tab title:**
+
 ```js
 useEffect(() => {
   if (running && focusedTask) {
-    document.title = `${mm}:${ss} — ${focusedTask.text}`
+    document.title = `${mm}:${ss} — ${focusedTask.text}`;
   } else {
-    document.title = 'React Demo'
+    document.title = "React Demo";
   }
-  return () => { document.title = 'React Demo' }
-}, [seconds, running, focusedTask])
+  return () => {
+    document.title = "React Demo";
+  };
+}, [seconds, running, focusedTask]);
 ```
+
 - DOM side effect on `document.title`.
 - Cleanup restores the title when the component unmounts or effect re-runs.
 
@@ -408,6 +418,7 @@ useEffect(() => {
 **Two distinct use cases in this project:**
 
 #### Use Case 1 — Storing a DOM element reference (`TaskInput.jsx`)
+
 ```js
 const inputRef = useRef(null)
 // ...
@@ -415,21 +426,25 @@ const inputRef = useRef(null)
 // ...
 inputRef.current?.focus()
 ```
+
 - React sets `inputRef.current` to the actual `<input>` DOM node after mount.
 - Used to imperatively call `.focus()` without any re-render.
 - Why not `useState`? Storing DOM nodes in state would cause unnecessary re-renders.
 
 #### Use Case 2 — Storing mutable values that shouldn't trigger re-renders (`FocusTimer.jsx`)
+
 ```js
-const intervalRef = useRef(null)
+const intervalRef = useRef(null);
 ```
+
 - Stores the `setInterval` return value (an integer ID).
 - We need to call `clearInterval(intervalRef.current)` from multiple places.
 - If we stored this in state, every `setInterval` call would trigger a re-render.
 
 ```js
-const secondsRef = useRef(0)
+const secondsRef = useRef(0);
 ```
+
 - Mirrors the `seconds` state value.
 - Allows `handleStopSave` (a `useCallback` with no `seconds` dependency) to always
   read the latest second count without causing a stale closure bug.
@@ -448,12 +463,14 @@ reference every tick — which is wasteful. The ref pattern avoids this.
 **Used in:**
 
 #### `App.jsx`
+
 ```js
 const focusedTask = useMemo(
   () => tasks.find((t) => t.id === focusedTaskId) || null,
-  [tasks, focusedTaskId]
+  [tasks, focusedTaskId],
 );
 ```
+
 - Derives the full task object from `tasks[]` + `focusedTaskId`.
 - Without `useMemo`: this `.find()` runs on every render of `AppContent`.
 - With `useMemo`: only re-runs when `tasks` or `focusedTaskId` changes.
@@ -462,26 +479,32 @@ const focusedTask = useMemo(
 ```js
 const stats = useMemo(
   () => ({
-    total:   tasks.length,
-    done:    tasks.filter((t) => t.completed).length,
+    total: tasks.length,
+    done: tasks.filter((t) => t.completed).length,
     pending: tasks.filter((t) => !t.completed).length,
   }),
-  [tasks]
+  [tasks],
 );
 ```
+
 - Three `.filter()` calls on every render would be wasteful at scale.
 - Memoized so it only recomputes when `tasks` changes.
 - Passed as a single `stats` prop to both `Stats` and `Filter`.
 
 ```js
 const filteredTasks = useMemo(
-  () => tasks.filter((task) =>
-    filter === "pending" ? !task.completed :
-    filter === "done"    ?  task.completed : true
-  ),
-  [tasks, filter]
+  () =>
+    tasks.filter((task) =>
+      filter === "pending"
+        ? !task.completed
+        : filter === "done"
+          ? task.completed
+          : true,
+    ),
+  [tasks, filter],
 );
 ```
+
 - Produces the visible task list for the current filter.
 - Deps: `[tasks, filter]` — only recalculates when tasks change OR filter changes.
 - Passed to `TaskList` as the `tasks` prop.
@@ -497,11 +520,13 @@ const filteredTasks = useMemo(
 **Used in:**
 
 #### `App.jsx`
+
 ```js
 const startFocus = useCallback((taskId) => {
   setFocusedTaskId(taskId);
 }, []);
 ```
+
 - Empty deps `[]` = this function never changes.
 - Safe because it only calls `setFocusedTaskId` (a stable setter from `useState`).
 
@@ -511,15 +536,20 @@ const saveSession = useCallback((taskId, seconds) => {
   setFocusedTaskId(null);
 }, []);
 ```
+
 - Uses **functional update** `setTasks(prev => ...)` so it doesn't need `tasks` in deps.
 - Empty deps array — stable reference for the lifetime of the component.
 
 ```js
-const deleteTask = useCallback((id) => {
-  if (id === focusedTaskId) setFocusedTaskId(null);
-  setTasks((prev) => prev.filter((t) => t.id !== id));
-}, [focusedTaskId]);
+const deleteTask = useCallback(
+  (id) => {
+    if (id === focusedTaskId) setFocusedTaskId(null);
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  },
+  [focusedTaskId],
+);
 ```
+
 - Has `focusedTaskId` in deps because it reads it directly (not via functional update).
 - Recreated only when `focusedTaskId` changes (not on every render).
 
@@ -527,9 +557,11 @@ const deleteTask = useCallback((id) => {
 const toggleTask = useCallback((id) => { ... }, [focusedTaskId]);
 const clearCompleted = useCallback(() => { ... }, [focusedTaskId]);
 ```
+
 - Same pattern — depend on `focusedTaskId` because they read it in the body.
 
 #### `TaskInput.jsx`
+
 ```js
 const handleSubmit = useCallback((e) => {
   e.preventDefault()
@@ -537,24 +569,28 @@ const handleSubmit = useCallback((e) => {
   ...
 }, [text, priority, onAdd])
 ```
+
 - Deps include `text` and `priority` because the handler reads them.
 - Recreated when user types (because `text` changes) — unavoidable.
 - `onAdd` is in deps because it's a prop (could theoretically change).
 
 #### `FocusTimer.jsx`
+
 ```js
 const handleStopSave = useCallback(() => {
-  setRunning(false)
-  onSaveSession(focusedTask.id, secondsRef.current)
-}, [focusedTask, onSaveSession])
+  setRunning(false);
+  onSaveSession(focusedTask.id, secondsRef.current);
+}, [focusedTask, onSaveSession]);
 ```
+
 - Uses `secondsRef.current` (not `seconds`) to avoid adding `seconds` to deps.
 - If `seconds` were in deps, this would be recreated every second.
 
 ```js
-const handlePause  = useCallback(() => setRunning(false), [])
-const handleResume = useCallback(() => setRunning(true), [])
+const handlePause = useCallback(() => setRunning(false), []);
+const handleResume = useCallback(() => setRunning(true), []);
 ```
+
 - Empty deps — these never need to change.
 
 ---
@@ -566,6 +602,7 @@ const handleResume = useCallback(() => setRunning(true), [])
 **Used in:**
 
 #### `ThemeContext.jsx` — creates and provides the context
+
 ```js
 const ThemeContext = createContext()
 
@@ -582,6 +619,7 @@ export function ThemeProvider({ children }) {
 
 export const useTheme = () => useContext(ThemeContext)
 ```
+
 - `createContext()` creates the context object.
 - `ThemeContext.Provider` wraps the app and injects `{ dark, toggle }` as the value.
 - `useTheme()` is a **custom hook** — it's just `useContext(ThemeContext)` with a
@@ -589,9 +627,11 @@ export const useTheme = () => useContext(ThemeContext)
   needing props drilled down from the top.
 
 #### `App.jsx` — consumes the context
+
 ```js
-const { dark, toggle } = useTheme()
+const { dark, toggle } = useTheme();
 ```
+
 - `AppContent` reads `dark` (to conditionally render ☀/🌙 button label) and
   `toggle` (to pass as the button's `onClick`).
 - No props needed — `AppContent` could be 10 components deep and still access theme.
@@ -607,7 +647,7 @@ A **controlled component** is an input whose value is driven by React state (not
 ```jsx
 // TaskInput.jsx
 <input
-  value={text}               // React state controls what's shown
+  value={text} // React state controls what's shown
   onChange={(e) => setText(e.target.value)} // every keystroke updates state
 />
 ```
@@ -617,10 +657,12 @@ The cycle is: **user types → onChange fires → setText updates state → Reac
 If you removed `value={text}`, the input would be **uncontrolled** — React wouldn't know what's in it. You'd need `useRef` to read it, and you'd lose the ability to validate, clear, or programmatically set it.
 
 The priority segmented buttons are also controlled:
+
 ```jsx
 <button className={`priority-btn ${priority === p ? 'active' : ''}`}
   onClick={() => setPriority(p)}>
 ```
+
 The visual "active" state is derived from `priority` state, not from the DOM.
 
 ---
@@ -631,20 +673,22 @@ Props are read-only inputs to a component. They represent the public API of a co
 
 **Props used in this project:**
 
-| Component | Receives | From |
-|---|---|---|
-| `Stats` | `stats` (object) | `AppContent` |
-| `FocusTimer` | `focusedTask`, `onSaveSession`, `onClearFocus` | `AppContent` |
-| `TaskInput` | `onAdd` | `AppContent` |
-| `Filter` | `filter`, `onFilterChange`, `stats` | `AppContent` |
-| `TaskList` | `tasks`, `onDelete`, `onToggle`, `focusedTaskId`, `onStartFocus` | `AppContent` |
-| `TaskItem` | `task`, `onDelete`, `onToggle`, `isFocused`, `onStartFocus` | `TaskList` |
+| Component    | Receives                                                         | From         |
+| ------------ | ---------------------------------------------------------------- | ------------ |
+| `Stats`      | `stats` (object)                                                 | `AppContent` |
+| `FocusTimer` | `focusedTask`, `onSaveSession`, `onClearFocus`                   | `AppContent` |
+| `TaskInput`  | `onAdd`                                                          | `AppContent` |
+| `Filter`     | `filter`, `onFilterChange`, `stats`                              | `AppContent` |
+| `TaskList`   | `tasks`, `onDelete`, `onToggle`, `focusedTaskId`, `onStartFocus` | `AppContent` |
+| `TaskItem`   | `task`, `onDelete`, `onToggle`, `isFocused`, `onStartFocus`      | `TaskList`   |
 
 `isFocused` is a good example of a **derived prop**:
+
 ```js
 // TaskList.jsx
 isFocused={focusedTaskId === task.id}
 ```
+
 `TaskList` doesn't pass `focusedTaskId` directly to `TaskItem`. It computes a
 simpler boolean so `TaskItem` doesn't need to know anything about how focusing works.
 This is **encapsulation** — TaskItem's API is clean.
@@ -659,47 +703,60 @@ React renders nothing for `false`, `null`, `undefined`. This enables conditional
 
 ```jsx
 // TaskItem.jsx — strikethrough on done (CSS class-based)
-<span className={`task-text`}>{task.text}</span>
+<span className={`task-text`}>{task.text}</span>;
 // .task-item.completed .task-text { text-decoration: line-through }
 
 // TaskItem.jsx — time spent only shown if > 0
-{timeSpent > 0 && (
-  <span className={`task-time ${isFocused ? 'active' : ''}`}>
-    ⏱ {formatTime(timeSpent)}
-  </span>
-)}
+{
+  timeSpent > 0 && (
+    <span className={`task-time ${isFocused ? "active" : ""}`}>
+      ⏱ {formatTime(timeSpent)}
+    </span>
+  );
+}
 
 // TaskItem.jsx — Start button hidden on completed tasks
-{!task.completed && (
-  <button className={`task-timer-btn start ${isFocused ? 'focused' : ''}`}>
-    {isFocused ? '▶ Active' : 'Start'}
-  </button>
-)}
+{
+  !task.completed && (
+    <button className={`task-timer-btn start ${isFocused ? "focused" : ""}`}>
+      {isFocused ? "▶ Active" : "Start"}
+    </button>
+  );
+}
 
 // FocusTimer.jsx — task name OR idle hint
-{focusedTask ? (
-  <div className="focus-task-name">Focusing on: {focusedTask.text}</div>
-) : (
-  <p className="timer-hint">Click Start on any task to begin a session</p>
-)}
+{
+  focusedTask ? (
+    <div className="focus-task-name">Focusing on: {focusedTask.text}</div>
+  ) : (
+    <p className="timer-hint">Click Start on any task to begin a session</p>
+  );
+}
 
 // FocusTimer.jsx — Pause vs Resume
-{running
-  ? <button onClick={handlePause}>Pause</button>
-  : <button onClick={handleResume}>Resume</button>
+{
+  running ? (
+    <button onClick={handlePause}>Pause</button>
+  ) : (
+    <button onClick={handleResume}>Resume</button>
+  );
 }
 
 // App.jsx — Clear Completed only when there are completed tasks
-{stats.done > 0 && (
-  <button className="clear-btn" onClick={clearCompleted}>
-    Clear Completed ({stats.done})
-  </button>
-)}
+{
+  stats.done > 0 && (
+    <button className="clear-btn" onClick={clearCompleted}>
+      Clear Completed ({stats.done})
+    </button>
+  );
+}
 
 // App.jsx — empty state message
-{tasks.length === 0 && (
-  <p className="empty-msg">No tasks yet. Add one above!</p>
-)}
+{
+  tasks.length === 0 && (
+    <p className="empty-msg">No tasks yet. Add one above!</p>
+  );
+}
 ```
 
 ---
@@ -714,6 +771,7 @@ When rendering an array, React needs a `key` prop to identify which items change
   <TaskItem key={task.id} task={task} ... />
 ))}
 ```
+
 - `task.id` = `Date.now()` at creation time. Guaranteed unique, never changes.
 - Using index as key would cause bugs: if you delete the first task, every item
   after it gets a new index → React re-renders them all, causing flicker and potentially
@@ -743,6 +801,7 @@ When rendering an array, React needs a `key` prop to identify which items change
 The Context API solves **prop drilling** — passing data through many component layers that don't need it.
 
 **Without Context:**
+
 ```
 App → AppContent → (theme toggle button needs dark + toggle)
   but also TaskItem somewhere deep needs dark to style differently
@@ -750,23 +809,27 @@ App → AppContent → (theme toggle button needs dark + toggle)
 ```
 
 **With Context:**
+
 ```jsx
 // ThemeContext.jsx
 <ThemeContext.Provider value={{ dark, toggle }}>
-  {children}  // the entire app tree
+  {children} // the entire app tree
 </ThemeContext.Provider>
 ```
+
 ```jsx
 // Any component, anywhere in the tree:
-const { dark, toggle } = useTheme() // reads directly from context
+const { dark, toggle } = useTheme(); // reads directly from context
 ```
 
 **How dark mode actually applies:**
 The theme doesn't use React to apply CSS classes. Instead, `useEffect` in `ThemeProvider` directly modifies the DOM:
+
 ```js
-document.body.removeAttribute('data-theme')     // dark (uses :root defaults)
-document.body.setAttribute('data-theme', 'light') // triggers light CSS overrides
+document.body.removeAttribute("data-theme"); // dark (uses :root defaults)
+document.body.setAttribute("data-theme", "light"); // triggers light CSS overrides
 ```
+
 This means the CSS transition is instant and doesn't depend on React re-rendering.
 
 ---
@@ -777,18 +840,19 @@ Breaking UI into small, focused components that compose into larger ones.
 
 Each component has **one responsibility:**
 
-| Component | Single Responsibility |
-|---|---|
-| `ThemeProvider` | Hold and provide theme state |
-| `Stats` | Display three count cards |
-| `FocusTimer` | Run the session timer for the focused task |
-| `TaskInput` | Handle the add-task form |
-| `Filter` | Show and handle the filter buttons |
-| `TaskList` | Map tasks array to TaskItem list |
-| `TaskItem` | Render one task row |
-| `Legend` | Show the static fundamentals reference |
+| Component       | Single Responsibility                      |
+| --------------- | ------------------------------------------ |
+| `ThemeProvider` | Hold and provide theme state               |
+| `Stats`         | Display three count cards                  |
+| `FocusTimer`    | Run the session timer for the focused task |
+| `TaskInput`     | Handle the add-task form                   |
+| `Filter`        | Show and handle the filter buttons         |
+| `TaskList`      | Map tasks array to TaskItem list           |
+| `TaskItem`      | Render one task row                        |
+| `Legend`        | Show the static fundamentals reference     |
 
 `LegendGroup` inside `Legend.jsx` is a sub-component:
+
 ```jsx
 function LegendGroup({ title, items }) { ... }
 
@@ -801,6 +865,7 @@ function Legend() {
   )
 }
 ```
+
 `LegendGroup` is composed into `Legend`. It has no reason to be exported — it's an
 implementation detail of Legend.
 
@@ -809,11 +874,15 @@ implementation detail of Legend.
 ## 6. File-by-File Breakdown
 
 ### `main.jsx`
+
 ```jsx
-createRoot(document.getElementById('root')).render(
-  <StrictMode><App /></StrictMode>
-)
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);
 ```
+
 - `StrictMode` renders every component **twice** in development to detect side effects
   that aren't safe to re-run. It's removed in production builds.
 - `createRoot` is the React 18+ API. The older `ReactDOM.render` is deprecated.
@@ -840,6 +909,7 @@ Instead, dark is the default, and `[data-theme="light"]` is the opt-in override.
 **The central state hub of the application.**
 
 **State owned here:**
+
 - `tasks[]` — source of truth for all task data
 - `filter` — current filter tab selection
 - `focusedTaskId` — which task is linked to the Focus Timer
@@ -850,23 +920,27 @@ If tasks lived in `TaskList`, `Stats` couldn't read it. The solution is to **lif
 up** to the nearest common ancestor — which is `AppContent`.
 
 **The `focusedTask` derivation pattern:**
+
 ```js
 const focusedTask = useMemo(
   () => tasks.find((t) => t.id === focusedTaskId) || null,
-  [tasks, focusedTaskId]
-)
+  [tasks, focusedTaskId],
+);
 ```
+
 We store only the **ID** in state (minimal state). The full task object is **derived**
 on demand. This avoids state duplication — if the task's text or timeSpent changes,
 `focusedTask` automatically reflects the latest values because it re-derives from `tasks`.
 
 **Auto-stop patterns (guard clauses in callbacks):**
+
 ```js
 const deleteTask = useCallback((id) => {
   if (id === focusedTaskId) setFocusedTaskId(null); // stop timer if this task is focused
   setTasks(...)
 }, [focusedTaskId])
 ```
+
 When a running task is deleted, the Focus Timer would otherwise keep running with
 a `focusedTask` that no longer exists. The guard prevents this inconsistency.
 
@@ -877,6 +951,7 @@ a `focusedTask` that no longer exists. The guard prevents this inconsistency.
 **The most technically complex component in the project.**
 
 **Props received:**
+
 - `focusedTask` — full task object or `null`
 - `onSaveSession(taskId, seconds)` — called on Stop & Save
 - `onClearFocus()` — called on Reset
@@ -884,33 +959,38 @@ a `focusedTask` that no longer exists. The guard prevents this inconsistency.
 **The stale closure problem and its solution:**
 
 Problem:
+
 ```js
 // If handleStopSave captured `seconds` from render scope:
 const handleStopSave = useCallback(() => {
-  onSaveSession(focusedTask.id, seconds) // seconds is STALE — always 0!
-}, [focusedTask, onSaveSession])
+  onSaveSession(focusedTask.id, seconds); // seconds is STALE — always 0!
+}, [focusedTask, onSaveSession]);
 // We didn't list `seconds` in deps, so it captured the value from the first render
 ```
 
 Solution:
+
 ```js
-const secondsRef = useRef(0)
+const secondsRef = useRef(0);
 
 useEffect(() => {
-  secondsRef.current = seconds  // always current
-}, [seconds])
+  secondsRef.current = seconds; // always current
+}, [seconds]);
 
 const handleStopSave = useCallback(() => {
-  onSaveSession(focusedTask.id, secondsRef.current)  // reads latest value
-}, [focusedTask, onSaveSession])
+  onSaveSession(focusedTask.id, secondsRef.current); // reads latest value
+}, [focusedTask, onSaveSession]);
 ```
+
 The ref is mutated synchronously after every seconds increment. The callback reads
 `secondsRef.current` which is always fresh, without needing `seconds` in its deps.
 
 **Why `focusedTask?.id` and not `focusedTask` as a dependency:**
+
 ```js
 useEffect(() => { ... }, [focusedTask?.id])
 ```
+
 `focusedTask` is an object. Every time `tasks` is updated in `App` (e.g., `timeSpent`
 increments every second), `focusedTask` gets a **new object reference** (because
 `useMemo` returns a new object). If we used `[focusedTask]`, the effect would re-run
@@ -924,20 +1004,29 @@ every second, resetting the timer. Using `focusedTask?.id` compares a primitive
 **Demonstrates:** controlled component, `useRef` for DOM focus, `useCallback`
 
 **The auto-focus pattern:**
+
 ```js
-const inputRef = useRef(null)
-useEffect(() => { inputRef.current?.focus() }, [])
+const inputRef = useRef(null);
+useEffect(() => {
+  inputRef.current?.focus();
+}, []);
 // After add:
-inputRef.current?.focus()
+inputRef.current?.focus();
 ```
+
 The `?.` optional chaining handles the case where ref isn't attached yet (safe pattern).
 
 **Why `useCallback` here has `text` and `priority` in deps:**
+
 ```js
-const handleSubmit = useCallback((e) => {
-  onAdd(text.trim(), priority)
-}, [text, priority, onAdd])
+const handleSubmit = useCallback(
+  (e) => {
+    onAdd(text.trim(), priority);
+  },
+  [text, priority, onAdd],
+);
 ```
+
 `text` and `priority` are read directly in the function body (not via ref or functional
 update). Without them in deps, `handleSubmit` would close over the initial values
 (`''` and `'medium'`) and always submit an empty task.
@@ -950,9 +1039,11 @@ update). Without them in deps, `handleSubmit` would close over the initial value
 components. It also handles the empty state.
 
 **The key computation happens here, not in `TaskItem`:**
+
 ```js
 isFocused={focusedTaskId === task.id}
 ```
+
 `TaskItem` receives a simple boolean. It doesn't need to know what `focusedTaskId` is
 or how focus management works. This is a deliberate API boundary.
 
@@ -963,22 +1054,28 @@ or how focus management works. This is a deliberate API boundary.
 **Props:** `task`, `onDelete`, `onToggle`, `isFocused`, `onStartFocus`
 
 **The `formatTime` helper:**
+
 ```js
 function formatTime(secs) {
-  const h = Math.floor(secs / 3600)
-  const m = Math.floor((secs % 3600) / 60)
-  const s = secs % 60
-  if (h > 0) return `${h}h ${m}m`
-  if (m > 0) return `${m}m ${s}s`
-  return `${s}s`
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
 }
 ```
+
 Shows human-readable format: `45s`, `3m 12s`, `1h 05m`. Only shows hours when there are hours.
 
 **The isFocused conditional rendering:**
+
 ```jsx
-{isFocused ? '▶ Active' : 'Start'}
+{
+  isFocused ? "▶ Active" : "Start";
+}
 ```
+
 The button text changes to show the task is actively being timed. Combined with the
 `.focused` CSS class, it turns purple/filled when active.
 
@@ -1017,19 +1114,20 @@ It's not exported because nothing else needs it.
 
 ### Complete State Map
 
-| State | Location | Type | Persisted |
-|---|---|---|---|
-| `tasks` | `App.jsx` | `Array<Task>` | Yes (localStorage) |
-| `filter` | `App.jsx` | `"all" \| "pending" \| "done"` | No |
-| `focusedTaskId` | `App.jsx` | `number \| null` | No |
-| `dark` | `ThemeContext.jsx` | `boolean` | Yes (localStorage) |
-| `text` | `TaskInput.jsx` | `string` | No |
-| `priority` | `TaskInput.jsx` | `"low" \| "medium" \| "high"` | No |
-| `error` | `TaskInput.jsx` | `string` | No |
-| `seconds` | `FocusTimer.jsx` | `number` | No |
-| `running` | `FocusTimer.jsx` | `boolean` | No |
+| State           | Location           | Type                           | Persisted          |
+| --------------- | ------------------ | ------------------------------ | ------------------ |
+| `tasks`         | `App.jsx`          | `Array<Task>`                  | Yes (localStorage) |
+| `filter`        | `App.jsx`          | `"all" \| "pending" \| "done"` | No                 |
+| `focusedTaskId` | `App.jsx`          | `number \| null`               | No                 |
+| `dark`          | `ThemeContext.jsx` | `boolean`                      | Yes (localStorage) |
+| `text`          | `TaskInput.jsx`    | `string`                       | No                 |
+| `priority`      | `TaskInput.jsx`    | `"low" \| "medium" \| "high"`  | No                 |
+| `error`         | `TaskInput.jsx`    | `string`                       | No                 |
+| `seconds`       | `FocusTimer.jsx`   | `number`                       | No                 |
+| `running`       | `FocusTimer.jsx`   | `boolean`                      | No                 |
 
 ### Task Object Shape
+
 ```js
 {
   id:        number,   // Date.now() — unique, used as React key
@@ -1041,6 +1139,7 @@ It's not exported because nothing else needs it.
 ```
 
 ### Derived Values (never stored in state)
+
 ```js
 // Derived from tasks + focusedTaskId
 focusedTask = tasks.find(t => t.id === focusedTaskId)
@@ -1060,6 +1159,7 @@ formattedTime = formatTime(task.timeSpent)
 ## 8. Feature Walkthroughs
 
 ### Add a Task
+
 1. User types in `TaskInput` → `text` state updates (controlled input)
 2. User selects priority → `priority` state updates
 3. User submits form → `handleSubmit` fires
@@ -1070,6 +1170,7 @@ formattedTime = formatTime(task.timeSpent)
 8. React re-renders: `Stats` (total + 1), `TaskList` (new item appears)
 
 ### Start a Focus Session
+
 1. User clicks "Start" on a TaskItem
 2. `onStartFocus(task.id)` fires → `startFocus(id)` in App
 3. `setFocusedTaskId(id)` updates state
@@ -1081,6 +1182,7 @@ formattedTime = formatTime(task.timeSpent)
 9. Task card gets `.timer-running` class (accent border glow)
 
 ### Stop & Save a Session
+
 1. User clicks "Stop & Save" in FocusTimer
 2. `handleStopSave` fires: reads `secondsRef.current` (current elapsed seconds)
 3. Calls `onSaveSession(focusedTask.id, secondsRef.current)`
@@ -1092,6 +1194,7 @@ formattedTime = formatTime(task.timeSpent)
 9. TaskItem shows updated `⏱ Xm Ys`
 
 ### Toggle Dark/Light
+
 1. User clicks theme button in header
 2. `toggle()` from `useTheme()` fires → `setDark(d => !d)`
 3. `useEffect([dark])` in ThemeProvider fires
@@ -1106,41 +1209,56 @@ formattedTime = formatTime(task.timeSpent)
 ## 9. CSS Architecture (Dark/Light Theme)
 
 ### Structure
+
 ```css
 /* index.css */
 :root {
   /* Dark values are DEFAULT — no attribute needed */
-  --bg-body:    #0b0b1e;
-  --bg-card:    #13132b;
-  --accent:     #6366f1;
+  --bg-body: #0b0b1e;
+  --bg-card: #13132b;
+  --accent: #6366f1;
   /* ... */
 }
 
 [data-theme="light"] {
   /* Light overrides — only active when body has data-theme="light" */
-  --bg-body:    #f0f2f5;
-  --bg-card:    #ffffff;
+  --bg-body: #f0f2f5;
+  --bg-card: #ffffff;
   /* ... */
 }
 ```
 
 All component styles use the variables:
+
 ```css
-.container { background: var(--bg-container); }
-.task-item { background: var(--bg-task); border-color: var(--border-task); }
+.container {
+  background: var(--bg-container);
+}
+.task-item {
+  background: var(--bg-task);
+  border-color: var(--border-task);
+}
 ```
 
 This means toggling dark/light mode requires **zero JavaScript changes to components**.
 One DOM attribute change causes the entire app to re-theme via CSS cascade.
 
 ### Priority Badge Light Overrides
+
 ```css
 /* Dark (default in :root) */
-.priority-high   { background: #3b0d0d; color: #fca5a5; }
+.priority-high {
+  background: #3b0d0d;
+  color: #fca5a5;
+}
 
 /* Light override — scoped to body[data-theme="light"] */
-[data-theme="light"] .priority-high   { background: #fee2e2; color: #dc2626; }
+[data-theme="light"] .priority-high {
+  background: #fee2e2;
+  color: #dc2626;
+}
 ```
+
 The selector `[data-theme="light"] .priority-high` works because `[data-theme="light"]`
 is on `<body>` and `.priority-high` is a descendant of body — CSS descendant selector.
 
@@ -1150,17 +1268,19 @@ is on `<body>` and `.priority-high` is a descendant of body — CSS descendant s
 
 ### What persists across page reloads
 
-| Data | Key | Value |
-|---|---|---|
-| All tasks (text, done, priority, timeSpent) | `"tasks"` | JSON string |
-| Theme preference | `"theme"` | `"dark"` or `"light"` |
+| Data                                        | Key       | Value                 |
+| ------------------------------------------- | --------- | --------------------- |
+| All tasks (text, done, priority, timeSpent) | `"tasks"` | JSON string           |
+| Theme preference                            | `"theme"` | `"dark"` or `"light"` |
 
 ### What does NOT persist
+
 - `filter` — resets to `"all"` on reload (intentional — sensible default)
 - `focusedTaskId` — timer session ends on reload (intentional)
 - `seconds` — current session time is lost on reload (FocusTimer is volatile)
 
 ### Why task saving is safe during timer sessions
+
 The Focus Timer does NOT update `tasks` every second. It only increments `secondsRef.current`
 locally. `tasks` is only updated in `saveSession` when the user clicks "Stop & Save".
 This means localStorage is not hammered once per second — it's only written when the
