@@ -184,7 +184,6 @@ src/
     ├── Filter.jsx            # All / Pending / Done filter bar
     ├── TaskList.jsx          # Maps tasks array → TaskItem components
     ├── TaskItem.jsx          # Single task row (checkbox, badge, time, Start, Delete)
-    └── Legend.jsx            # Static table of React fundamentals used
 ```
 
 ---
@@ -448,17 +447,6 @@ references `stats` values. Defined at module level would require a function anyw
 never changes. Key insight: `stats` is received but actually not used in the current
 version (the filter labels are just "All", "Pending", "Done" without counts). It's
 kept in props for easy extension.
-
----
-
-### `Legend.jsx`
-
-**Static component.** `HOOKS` and `CONCEPTS` arrays are defined at module level
-(outside the component) because they never change — they don't need to be recreated
-on every render.
-
-`LegendGroup` is defined in the same file — a **co-located sub-component** pattern.
-It's not exported because nothing else needs it.
 
 ---
 
